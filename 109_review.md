@@ -5,7 +5,7 @@
   - [NaN](#nan)
   - [Infinity](#infinity)
 - [strings](#strings)
-- [interpolation in strings](#interpolation-in-strings)
+  - [interpolation in strings](#interpolation-in-strings)
 - [boolean vs. truthiness](#boolean-vs-truthiness)
 - [nil](#nil)
 - [array and hash syntax](#array-and-hash-syntax)
@@ -43,6 +43,7 @@
   - [pass-by-reference and pass-by-value](#pass-by-reference-and-pass-by-value)
   - [the call stack](#the-call-stack)
 - [expressions and statements](#expressions-and-statements)
+- [Resources to look at](#resources-to-look-at)
 
 
 # Naming conventions: legal vs. illegal
@@ -54,7 +55,7 @@
   - method, variable and file names are written in snake_case
   - constants are written in SCREAMING_SNAKE_CASE
   - These conventions can be ignored, but this can cause confusion down the line for yourself and others with your code. A constant that isn't named using SCREAMING_SNAKE_CASE can easily be mistaken for a variable that can be edited. Because Ruby is a permissive language, it will allow this editing to take place which can cause problems elsewhere in your code.
-  - Pete mentioned in the 101-109 study group that ``#each`` ``#map`` and ``#select`` are idiomatic ways to iterate in ruby, where methods like using ``while`` ``for`` and ``loop`` aren't idiomatic. He also mentioned ``!`` at the end of a method name as something that indicated danger. [Link to the conversation here](https://launchschool.slack.com/archives/C118ST0KD/p1674587291872459)
+- Pete mentioned in the 101-109 study group that ``#each`` ``#map`` and ``#select`` are idiomatic ways to iterate in ruby, where methods like using ``while`` ``for`` and ``loop`` aren't idiomatic. He also mentioned ``!`` at the end of a method name as something that indicated danger. [Link to the conversation here](https://launchschool.slack.com/archives/C118ST0KD/p1674587291872459)
 # numbers, including NaN and Infinity
 
 [Source](https://launchschool.com/books/ruby/read/basics#numbers)
@@ -82,15 +83,92 @@
   ```
   
 ## Infinity
+- returned when a number other than 0 is divided by 0.0. Can be positive or negative.
+```ruby 
+7/0.0 => infinity
+2346092346/0.0 => Infinity
+-66336/0.0 => -Infinity
+```
 # strings
-# interpolation in strings
+[Source](https://launchschool.com/books/ruby/read/basics#strings)
+- a string is a list of characters in a specific sequence
+- in Ruby they're denoted with either double quotes "string" or single quotes 'string'
+- if denoted with single quotes, the string will return exactly what's put in between the first and second single quote
+- if denote with double quotes, the string is read in a way that allows for interpolation. 
+- escape character \ can be used to allow for the inclusion of ' and " in string objects. 
+## interpolation in strings
+- uses the syntax #{ruby expression here}
+- allows for variable references to be directly incorporated for string output to the display
+```ruby
+a = David
+puts "What's up #{a}" # outputs "What's up David"
+```
 # boolean vs. truthiness
+[Source](https://launchschool.com/lessons/8a39abff/assignments/f72b8e01)
+- the only two true boolean values in Ruby are ``true`` and ``false``.
+- Truthiness refers to the fact that all variables in Ruby can be evaluated to return one of these booleans. Most objects in Ruby are "truthy" meaning they return true when evaluated by Ruby. 
+- Two objects in Ruby are "falsy" meaning they return false when evaluated by Ruby. 
+  - these two values are nil and false. 
+- Just because an object can be evaluated to true or false, doesn't mean that object is equivalent to true or valse.
+
+```ruby
+p nil == false # outputs false
+p 6 == true # outputs false
+```
+- in the first example, nil, a falsy value, is compared to false with the == comparator. The value false is returned because the two are not equivalent. Similarly, in line 2 the integer 6 and true are compared, and false is returned. 
 # nil
+- a value used to indicate an absence of value. If a variable points to the value nil, it's the same as saying that the variable is empty or points to nothing. 
+```ruby
+0 # this is the integer 0
+[] # this is an empty array
+'' # this is an empty string
+{} # this is an empty hash
+nil # this isn't anything 
+```
 # array and hash syntax
+[Source](https://launchschool.com/books/ruby/read/arrays#whatisanarray)
+- arrays are denoted by [] and list their elements separated by a comma
+```ruby
+["here", "are", "some", "strings", "as", "elements"]
+
+[1, 2, 3, 4, 5, 6]
+
+[["arrays"], ["within"], ["arrays"]]
+```
+- hashes are denoted by {} and contain key value pairs
+[Source](https://launchschool.com/books/ruby/read/hashes#whatisahash)
+```ruby
+# they can be written in hash rocket syntax
+{:all => "that", :boy => "genius", :popsicle => "stand"}
+# or with a colon in between the key and the value
+{all: "that", boy: "genius", popsicle: "stand"}
+=> {:all => "that", :boy => "genius", :popsicle => "stand"}
+```
+  - curly braces are also used to denote blocks, so use context clues to understand what's being defined in each case.
 # array properties and methods: array.size, array.push, array.pop
+[Source](https://launchschool.com/books/ruby/read/arrays#whatisanarray)
+- arrays are an ordered list of elements. These elements can be any ruby object. 
+  - each element in the list has a number, called an index. The first element in an array has an index of 0, and the indicies increase in number until each element is assigned an index. 
+- Indicies can be reassigned using the ``[]=`` method. This method is mutating, meaning that the elements of the array are reassigned in place, a new array is not created with the new element reassigned within it.
+- ``Array#size`` returns the number of elements in an array as an integer
+- ``Array#push`` adds the argument to the end of the array and is mutating
+- ``Array#pop`` returns the last element of an array and deletes the element that it returns. It is mutating
 # operators
+[Source](https://launchschool.com/books/ruby/read/basics#operations)
 ## numeric operators: +, -, *, /, %, divmod, **
+- ``/`` returns a quotient when used with integers
+- ``%`` or modulo operator returns value similar to remainder, but it matches the sign of the divisor, not the dividend
+- ``#divmod`` returns an array with the quotient and the modulo
+```ruby
+16.divmod(3) => [5, 1]
+```
 ## string operators: +, *
+- ``+`` returns a new string containing the two original string concatenated 
+- ``*`` returns a new string with a number of copies of self determined by the integer passed to it
+```ruby
+"Storm" + "Front" # "StormFront"
+"times" * 3 # "timestimestimes"
+```
 ## conditional operators: ==, !=, <, >, <=, >=, ternary
 ## logical operators and short-circuit evaluation: !, &&, ||
 ## operator precedence
@@ -110,7 +188,31 @@
 ## initialization and reassignment
 ## uninitialized variables
 ## scope
+[Source](https://launchschool.com/books/ruby/read/variables#variablescope)
+- variable scope in ruby determines whether or not a variable is available for use. This scope is modified by the variable's location in the program with respect to blocks and method definitions.
+- method definitions have their own, self contained scope, and can only access variables that are passed into them as arguments
+- blocks are able to access variable initialized in an outer scope, and as a result are able to modify the values they point to. However, block scoped variables are not accessible by a more outer scope. 
 ## variables as pointers
+[Source](https://launchschool.com/books/ruby/read/more_stuff#variables_as_pointers)
+- variables don't contain a value. Variables point to a place in memory where the value is stored. This code block shows some of the consequences of this behavior.
+
+```ruby
+a = 'To be or not to be'
+b = a
+a = 'that is the question'
+puts a # outputs 'that is the question'
+puts b # outputs 'To be or not to be'  
+```
+- a is initialized as a string object. In our second line, b is initialized to the value referenced by a, not a itself. As a result, b points to the string 'to be or not to be'. In our last line, a is reassigned to a new string object 'that is the question.' b continues to point to 'To be or not to be' and so when #puts is called on each variable, they return different values.
+- because references to values are stored in variables, if the value in memory is edited by another part of the program, the value the variable uses changes as well, even without directly manipulating the variable in the program.
+```ruby
+a = "Madam, I'm"
+b = a 
+a.concat(" Adam")
+puts a # outputs Madam I'm Adam
+puts b # outputs Madam I'm Adam
+```
+- ``#concat`` is a mutating method, and so it changes the string object that a is pointing to when it's used in line 3. In line 5, local variable b is passed to the puts method, and returns the modified string "Madam, I'm Adam" even though it wasn't directly modified in the code we wrote. This is because variable b points to the same place in memory that variable a points to, so when it accesses that point in memory it returns the changes that were made with ``#concat``. 
 # conditionals and loops
 [Source for conditionals](https://launchschool.com/books/ruby/read/flow_control#conditionals)  
 [Source for loops](https://launchschool.com/books/ruby/read/loops_iterators#simpleloop)
@@ -215,5 +317,6 @@ end
 - All other parts of Ruby evaluate to values, and are therefore considered expressions. 
   - in spite of this, it's common to refer to one line of code as a statement (eg if statement, case statement)
 - Ruby uses a strict evaluation strategy, which means it completely evaluates its expressions and converts them to objects. 
-```ruby
-#an example of Ruby's strict evaluation strategy
+# Resources to look at
+[Written test terminology/review from SPOT wiki](https://docs.google.com/document/d/17QsexzPbb_6isKtrFAaTc5J_CaM7-UbUU8WU26C-Lm8/edit)  
+[SPOT practice problems (these are for the old 109)](https://fine-ocean-68c.notion.site/RB101-934e6196044d425f9b2f23830ead6534?p=91bcc598a24d4ad6aadad86802e7412b&pm=s)
