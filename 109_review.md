@@ -145,6 +145,11 @@ nil # this isn't anything
 => {:all => "that", :boy => "genius", :popsicle => "stand"}
 ```
   - curly braces are also used to denote blocks, so use context clues to understand what's being defined in each case.
+- values are retrieved using ``Hash#[]`` and passing the name of the key associated with the value you want to retrieve as the argument. 
+```ruby
+songs = {:all => "that", :boy => "genius", :popsicle => "stand"}
+songs[:boy] => "genius"
+```
 # array properties and methods: array.size, array.push, array.pop
 [Source](https://launchschool.com/books/ruby/read/arrays#whatisanarray)
 - arrays are an ordered list of elements. These elements can be any ruby object. 
@@ -157,7 +162,8 @@ nil # this isn't anything
 [Source](https://launchschool.com/books/ruby/read/basics#operations)
 ## numeric operators: +, -, *, /, %, divmod, **
 - ``/`` returns a quotient when used with integers
-- ``%`` or modulo operator returns value similar to remainder, but it matches the sign of the divisor, not the dividend
+- ``%`` or modulo operator returns value similar to remainder, but it matches the sign of the divisor, not the dividend. It also rounds to negative infinity, so negative integers can provide larger values than expected as well.
+  - Pete says all we really need to know for LS is that when working with positive numbers the operations are identical, and when using negative numbers it's important to be cautious, because modulo and remainder return different values. [conversation here](https://launchschool.slack.com/archives/C118ST0KD/p1674425038460069)
 - ``#divmod`` returns an array with the quotient and the modulo
 ```ruby
 16.divmod(3) => [5, 1]
@@ -170,7 +176,31 @@ nil # this isn't anything
 "times" * 3 # "timestimestimes"
 ```
 ## conditional operators: ==, !=, <, >, <=, >=, ternary
+[Source](https://launchschool.com/books/ruby/read/flow_control#comparisons)
+- return boolean values based on arguments passed. Fairly self explanatory except for ternary and !=
+- ``!=`` returns true if the objects are not equivalent
+- [The ternary operator](https://launchschool.com/books/ruby/read/flow_control#ternaryoperator) is kind of a special little case. It allows for an if/else statement in one line using ``?`` and ``:``. 
+- It's best used to choose between two values, not to choose between two actions. Unexpected bugs can pop up in your code if you use methods within the ternary syntax. 
+```ruby
+# good ternary uses
+baby_weight_increase = formula_consumption > calories_burned ? "Baby's gaining weight!" : "Baby's losing weight"
+puts(name ? "There's a name here!" : "There's nothing here") 
+return cool_status ? "swag" : "no swag"
+# bad ternary uses because they're choosing between two actions
+hitchhiker ? (foo = 42) : (bar = 3.1415) # Setting variables
+hitchhiker ? puts(42) : puts(3.1415)     # Printing
+```
 ## logical operators and short-circuit evaluation: !, &&, ||
+[Source](https://launchschool.com/lessons/8a39abff/assignments/f72b8e01)
+
+In short circuiting, Ruby will return a value as soon as it's able to guarantee what that value will be. In the case of an ``&&`` operator, if first expression evaluates to false, it will immediately return false without evaluating the second expression. 
+```ruby
+false && 3/0 => false
+```
+As a result no ZeroDivionError is thrown here. It works similarly with the ``||`` operator. 
+```ruby
+true || 400/0 => true
+```
 ## operator precedence
 [Source](https://launchschool.com/books/ruby/read/flow_control#combiningexpressions)
 - when evaluating multiple operations, each operator is executed according to its place in the order of precedence.
@@ -179,14 +209,45 @@ nil # this isn't anything
 3. ``&&`` - Logical AND
 4. ``||`` - Logical OR
 # coercing values: #to_s, #to_i, #to_f, #to_a, #to_h
+- to_s takes a value and attempts to convert it into a string
+- to_i takes an object and attempts to convert it into an integer. This is commonly used with user input from gets because it's formatted in a string when it's input.    
+- to_f takes an object and attempts to convert it into a float
+- to_h takes a two dimensional array with elements consisting of two element arrays and converts it into a hash.
+```ruby
+[[“a”, 1], [“b”, 2], [“c”, 3], [“d”, 4]].to_h 
+=> {"a"=>1, "b"=>2, "c"=>3, "d"=>4} 
+```
+- to_a takes a hash and converts each key-value pair to a two dimensional array and puts each of these arrays into an array as elements. 
+```ruby
+{"a"=>1, "b"=>2, "c"=>3, "d"=>4}.to_a
+=>[["a", 1], ["b", 2], ["c", 3], ["d", 4]] 
+```
 # mutability, immutability, and constants
+[Source](https://launchschool.medium.com/variable-references-and-mutability-of-ruby-objects-4046bd5b6717)
 ## mutability
+- mutability has to do with the ability of an object's value to be change.
+- In Ruby, strings, arrays, hashes and most other objects are mutable
 ## immutability
+- immutable objects cannot be changed. The most common immutable objects in Ruby include booleans and numbers. Nil and Ranges are also parts of classes that are immutable. 
 ## constants
+- constants are accessible within any scope, and are not technically immutable, although it is good practice to treat them as such. [Source](https://launchschool.com/books/ruby/read/variables#typesofvariables)
 # variables
 ## identifiers: variable names, constant names, method names
+- distinguished from one another through naming conventions. snake_case is used for both methods and variables. Ruby defaults to calling the variable if a method and a variable have the same name. 
 ## initialization and reassignment
+[Source](https://launchschool.com/books/ruby/read/variables#assigningvaluetovariables)
+- both use the ``=`` operator. A variable is initialized the first time the variable is used in the program. Reassignment occurs when a variable has already initialized and ``=`` is used to assign it to a different value.   
 ## uninitialized variables
+- variables can at times be created in Ruby and then not assigned to a value. This occurs in the case of an if statement whose clauses aren't all executed. For example
+```ruby
+if true
+  a = 20
+  else
+  b = 23
+end
+p a # returns 20
+p b # returns nil
+```
 ## scope
 [Source](https://launchschool.com/books/ruby/read/variables#variablescope)
 - variable scope in ruby determines whether or not a variable is available for use. This scope is modified by the variable's location in the program with respect to blocks and method definitions.
