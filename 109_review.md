@@ -209,8 +209,17 @@ true || 400/0 => true
 3. ``&&`` - Logical AND
 4. ``||`` - Logical OR
 # coercing values: #to_s, #to_i, #to_f, #to_a, #to_h
-- to_s takes a value and attempts to convert it into a string
-- to_i takes an object and attempts to convert it into an integer. This is commonly used with user input from gets because it's formatted in a string when it's input.    
+- to_s takes a value and attempts to convert it into a string. 
+
+```ruby 
+"12345".to_s         # returns 12345
+nil.to_s             # returns ""
+[1, 2, 3, 4, 5].to_s # returns "[1, 2, 3, 4, 5]
+```
+- to_i takes an object and attempts to convert it into an integer. 
+  - method is commonly used with user input from gets because it's formatted in a string when it's input.
+```ruby
+#if an object     
 - to_f takes an object and attempts to convert it into a float
 - to_h takes a two dimensional array with elements consisting of two element arrays and converts it into a hash.
 ```ruby
@@ -379,5 +388,5 @@ end
   - in spite of this, it's common to refer to one line of code as a statement (eg if statement, case statement)
 - Ruby uses a strict evaluation strategy, which means it completely evaluates its expressions and converts them to objects. 
 # Resources to look at
-[Written test terminology/review from SPOT wiki](https://docs.google.com/document/d/17QsexzPbb_6isKtrFAaTc5J_CaM7-UbUU8WU26C-Lm8/edit)  
+[Written test terminology/review from SPOT wiki](https://drive.google.com/file/d/16Q32xXRoJ0wFMwiA8CojhdqfwCgE9rjj/view)  
 [SPOT practice problems (these are for the old 109)](https://fine-ocean-68c.notion.site/RB101-934e6196044d425f9b2f23830ead6534?p=91bcc598a24d4ad6aadad86802e7412b&pm=s)
