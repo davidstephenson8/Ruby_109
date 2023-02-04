@@ -1,9 +1,8 @@
-def plus(x, y)
-  x = x + y
+arr1 = ["a", "b", "c"]
+arr2 = arr1.dup
+arr2.map! do |char|
+  char.upcase
 end
 
-a = 3
-b = plus(a, 2)
-
-puts a
-puts b
+puts arr1 
+puts arr2

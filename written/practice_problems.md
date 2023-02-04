@@ -222,4 +222,70 @@ puts a
 puts b
 ```
 
-The invocation of ``puts`` with local variable ``a`` outputs 3 and returns ``nil``. The invocation of ``puts`` with local variable ``b`` outputs 5 and returns nil. The ``plus`` method is defined with two parameters, ``x`` and ``y``. When the plus method is invoked, x is assigned to the object referenced by the local variable ``a``, 3. The other parameter is assigned to two. Then, within the ``plus`` method ``x`` is reassigned to ``x + y``. So, ``x`` is reassigned to 5, and the plus method returns 5, which means that outside of the method ``b`` is assigned to the value 5. This result is then output on line 9. 
+The invocation of ``puts`` with local variable ``a`` outputs 3 and returns ``nil``. The invocation of ``puts`` with local variable ``b`` outputs 5 and returns nil. The ``plus`` method is defined with two parameters, ``x`` and ``y``. When the plus method is invoked, x is assigned to the object referenced by the local variable ``a``, 3. The other parameter is assigned to two. Then, within the ``plus`` method ``x`` is reassigned to ``x + y``. So, ``x`` is reassigned to 5, and the plus method returns 5, which means that outside of the method ``b`` is assigned to the value 5. This result is then output on line 9. This demonstrates the concept of variables as pointers, because the actual variable a isn't passed into the method to be modified, just its value. If the actual variable were passed into the method, we might expect ``puts a`` to return 5, but because only the value is available to the method the value the variable points to remains unchanged.  
+
+8. What does the following code return, output and why? What concept does is demonstrate?
+```ruby
+def increment(x)
+  x << 'b'
+end
+
+y = 'a'
+increment(y) 
+
+puts y
+```
+
+This code returns nil on line 8 and outputs ``ab``. This is because the ``<<`` method is mutating, and when it's called inside of the ``increment`` method it modifies the object referenced by ``y``. This is because this object is passed into the method as an argument on line 6 via the variable ``y``. When the object ``y`` points to is changed within the method that effect is permanent, and is reflected when the ``puts`` method is called on ``y`` in line 8. This code demonstrates variables as pointers because it shows that when the object the variable referenced is changed, even within a method whose scope is self contained, those changes are reflected throughout the program.
+
+9. What does the following code return and output and why? What concept does it demonstrate?
+```ruby
+def change_name(name)
+  name << 'bob' << 'jones'      # does this reassignment change the object outside the method?
+end
+
+name = 'jim'
+change_name(name)
+puts name 
+```
+
+The ``puts`` invocation on line 7 outputs ``jim`` and returns ``nil`` because reassignment is non-mutating so it doesn't affect the outer scoped variable ``name``. Variable shadowing does not occur in this example, because methods definte their own scope, so there would be no way for the method to access the outer scoped ``name`` variable in this example. However, because the parameter name is ``name`` we might be tempted to think of them as the same object. They're not, they are two distinct variables, a method scoped variable ``name`` and an outer scoped variable ``name``. 
+
+10. What does the following code return and output and why? What concept does it demonstrate?
+```ruby
+def cap(str)
+  str.capitalize!   # does this affect the object outside the method?
+end
+
+name = "jim"
+cap(name)
+puts name 
+```
+The invocation of the ``puts`` method on line 7 outputs ``Jim`` and returns ``nil``. When ``name`` is passed to the ``cap`` method, it passes the string object ``jim`` that it references as an argument to be assigned to the local variable ``str``. When the ``capitalize!`` method is called on this string object, the object is modified in memory to be ``Jim``. The ``name`` variable still points to this address in memory, so when the outer scoped ``name`` variable is called on line 7, the object it references, ``Jim`` is returned. This illustrates the idea of variables as pointers, because even though the name variable wasn't directly modified, because the value that it references was changed. the value it returns when passed to methods changes as well. 
+
+11. ***** (not sure if this will be on the assessment tbh) What object does ``arr`` refer to? Why? What concept does this demonstrate? 
+```ruby
+a = [1, 3]
+b = [2]
+arr = [a, b]
+arr
+
+a[1] = 5
+arr
+```
+
+``arr`` points to ``[[1, 3], [2]]`` on line 4 and to ``[[1, 5], 2]`` on line 7. This code shows that an array uses the same objects that the variables do in this instance, it doesn't copy values and make its own objects. The modification of the array object a references in line 6 is proof of this. Because the ``[]=`` method is mutating, it changes the array referenced by ``a`` and puts a 5 at index 1. This same object is the element contained at index 0 in the array referenced by ``arr``. So, ``arr`` references an array that points to the same objects that ``a`` and ``b`` point to. This demonstrates variables as pointers because we can see that the objects referenced by ``arr`` and ``a`` are related and if one is mutated, that change will be reflected in the other. 
+
+12.  What does this code output and return and why? What concept does this demonstrate. 
+```ruby
+arr1 = ["a", "b", "c"]
+arr2 = arr1.dup
+arr2.map! do |char|
+  char.upcase
+end
+
+puts arr1 
+puts arr2
+```
+
+This code demonstrates variables as pointers. The ``dup`` method is called on ``arr1`` and the locally scoped variable ``arr2`` is assigned to the return value. ``dup`` is non-mutating, so a new object with the same values is returned. As a result, when the ``map!`` method is called on ``arr2`` and each element has the ``upcase`` method called on it, the values of the elements in ``arr2`` are modified but not those in ``arr1``. As a result, the lowecase letters a b and c are output on separate lines with the ``puts`` method invocation on line 7, and ``nil`` is returned while the uppercase letters ``A`` ``B`` and ``C`` are returned when the ``puts`` method is called on ``arr2`` in line 8. This demonstrates variables as pointers because when a second array is returned by a method the original object will not be affected by further changes to that second object. 
