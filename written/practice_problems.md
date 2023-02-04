@@ -127,7 +127,7 @@ end
 
 This code outputs ``Hellow is truthy`` and returns ``nil``. This is because of truthiness. In Ruby, all values except for ``nil`` and ``false`` are considered truthy, meaning that when evaluated by Ruby they return the boolean value ``true``. So, in the if statement the object referenced by local variable ``a`` evaluates to ``true`` which means that the code in the subsequent line ``puts "Hello is truthy"`` is executed. 
 
-2. What does the following code return? What does it output? Why? What concept does it demonstrate? 
+2. ***What does the following code return? What does it output? Why? What concept does it demonstrate? 
 ```ruby
 def test
   puts "written assessment"
@@ -143,3 +143,83 @@ end
 ```
 
 This code outputs ``written assessment`` when the ``test`` method is invoked on line 5. The local variable ``var`` is assigned to the output of the ``test`` method, ``nil``. Then, in the if statement ``var`` is evaluated. Because it returns a falsy value, ``nil`` the else statement is executed and ``interview`` is output and ``nil`` is returned. 
+
+# Object Passing/Variables As Pointers
+
+1. What are a and b assigned to once this code block runs?
+```ruby
+a = "hi there"
+b = a
+a = "not here"
+```
+a is assigned to the string object ``not here`` and b is assigned to the string object ``hi there``. This is because b is initialized to point to the string object assigned to a, ``hi there``. Then a is reassigned to point to the string object ``not here``. ``b`` continues to point at the original string object ``hi there`` because it wasn't reassigned. This example illustrates the idea of variables as pointers, because if ``b`` were assigned to the value of ``a`` it would change if that value changed. However, because the variables point to places in memory, one variable's pointer can change location without affecting the other variable. 
+
+2. What are a and b assigned to after this block of code runs? What does this excerpt illustrate. 
+
+```ruby
+a = "hi there"
+b = a
+a << ", Bob"
+```
+After this code block runs, both variables point to the string object ``hi there, Bob`` in memory. This is because a is initialized to the string ``hi there`` and b is initialized to point to the same object. The ``<<`` method is mutating, so the string object referenced by a is changed in place when it's called. The string ``, Bob`` is concatenated to our original string object, and because both variable continue to point to the same object that has been modified, both variables will return the same value. 
+
+3. What are a, b and c? What if the last line was ``c = a.uniq!``?
+```ruby
+a = [1, 2, 3, 3]
+b = a
+c = a.uniq
+```
+The local variables ``a`` and ``b`` both would return the array ``[1, 2, 3, 3]``. The local variable ``c`` points to an array ``[1, 2, 3]`` in memory. ``a`` is initialized to the ``[1, 2, 3, 3]`` array, and ``b`` is assigned to the same value by being initialized to ``a``. When the ``uniq`` method is called in line 3 it returns a new array with repeat elements removed. As a result, the array ``[1, 2, 3]`` is returned. If ``uniq!`` were called instead of ``uniq`` all three variables would point to the same array, ``[1, 2, 3]``. This is because the ``uniq`` method is mutating, so it would modify the original object that ``a`` and ``b`` point to instead of returning a new object to assign to ``c`` like we saw in the first example. 
+
+4. What is ``a``? WHat if we called ``map!`` instead of ``map``? 
+```ruby
+def test(b)
+  b.map {|letter| "I like the letter: #{letter}"}
+end
+
+a = ['a', 'b', 'c']
+test(a)
+```
+In this example, if the method ``map`` is used inside of the test method, the variable ``a`` points to the value ``['a', 'b', 'c']`` in memory. This is because the ``map`` method is non-mutating, so the values in the array aren't permanently reassigned. The ``map`` method inside of the ``test`` method returns an array that contains modified strings, but doesn't directly modify the array object. If the ``map!`` were used, the array returned would be modified. This is because the array object passed into the method as an argument via the variable ``a`` would be accessible and modifiable by the ``map!`` method. 
+
+5. ***What are ``a`` and ``b`` assigned to? 
+```ruby
+a = 5.2
+b = 7.3
+
+a = b
+
+b  += 1.1
+```
+
+``a`` points to 7.3 and ``b`` points to 8.4. There are a few reasons for this behavior. First the method called on ``b``, ``b += 1.1`` is equivalent to the constuction ``b = b + 1.1``, which means that the variable ``b`` is reassigned, not mutated. However, even if the ``+=`` method were typically mutating, because numbers are immutable there's no way to change the object that b is pointing to without pointing to a new object. So, because the object ``b`` points to is changed, it points to a different object than what ``a`` points to. This code demonstrates the concept of variables as pointers and the immutability of some Ruby objects.  
+
+6. What does the following code return? What does it output? Why? What concept does is demonstrate?
+```ruby
+def test(str)
+  str  += '!'
+  str.downcase!
+end
+
+test_str = 'Written Assessment'
+test(test_str)
+
+puts test_str
+```
+
+In the last line of the program, the string ``Written Assesment`` is output and ``nil`` is returned. This is because then the string object referenced by ``test_str`` is passed to the method isn't modified by the method. In line 2 the ``+=`` method is called on the local variable ``str`` and passed the string object `!`. The ``+=`` method is non-mutating, and returns a new string object with the `!` character concatenated to it, ``Written Assessment!``. However, because this object is different from the original object, whem the mutating method ``downcase!`` is called on ``str`` it's the new object, not the old one that's mutated. The ``test`` method returns ``written assessment!`` but this does not modify the local variable ``test_str``.
+
+7. ***What does the following code return? What does it output? Why? What concept does it demonstrate?
+```ruby
+def plus(x, y)
+  x = x + y
+end
+
+a = 3
+b = plus(a, 2)
+
+puts a
+puts b
+```
+
+The invocation of ``puts`` with local variable ``a`` outputs 3 and returns ``nil``. The invocation of ``puts`` with local variable ``b`` outputs 5 and returns nil. The ``plus`` method is defined with two parameters, ``x`` and ``y``. When the plus method is invoked, x is assigned to the object referenced by the local variable ``a``, 3. The other parameter is assigned to two. Then, within the ``plus`` method ``x`` is reassigned to ``x + y``. So, ``x`` is reassigned to 5, and the plus method returns 5, which means that outside of the method ``b`` is assigned to the value 5. This result is then output on line 9. 
