@@ -289,3 +289,122 @@ puts arr2
 ```
 
 This code demonstrates variables as pointers. The ``dup`` method is called on ``arr1`` and the locally scoped variable ``arr2`` is assigned to the return value. ``dup`` is non-mutating, so a new object with the same values is returned. As a result, when the ``map!`` method is called on ``arr2`` and each element has the ``upcase`` method called on it, the values of the elements in ``arr2`` are modified but not those in ``arr1``. As a result, the lowecase letters a b and c are output on separate lines with the ``puts`` method invocation on line 7, and ``nil`` is returned while the uppercase letters ``A`` ``B`` and ``C`` are returned when the ``puts`` method is called on ``arr2`` in line 8. This demonstrates variables as pointers because when a second array is returned by a method the original object will not be affected by further changes to that second object. 
+
+# Mutability/Mutating Methods
+
+1. What does this code output and return and why? What concept does this demonstrate? What values do ``s`` and ``t`` reference?
+```ruby
+def fix(value)
+  value.upcase!
+  value.concat('!')
+  value
+end
+
+s = 'hello'
+t = fix(s)
+```
+s would reference HELLO! after the method call
+t would also reference HELLO! after the ``fix`` method call. Because the string object ``hello`` is passed into the method through the variable ``s`` into the ``fix`` method its able to be modified by that method. Both ``upcase!`` and ``concat`` are mutating methods, so they change the object that they're called on. So the string object referenced by ``s`` is modified. ``t`` is assigned to the return value of the ``fix`` method, which is the method scoped variable ``value``. The string object referenced by ``value`` was also modified by ``upcase!`` and ``concat`` so it returns ``HELLO!``
+
+2. What does this code output and return and why? What concept does this demonstrate. What values do ``s`` and ``t`` reference? 
+```ruby
+def fix(value)
+  value = value.upcase
+  value.concat('!')
+end
+
+s = 'hello'
+t = fix(s)
+```
+``s`` continues to point to the string value ``hello`` and t now points to ``HELLO!``. This is because when the object referenced by ``s`` is passed into the method it's initially bound to the local variable ``value``. This variable is ressigned to the string object returned when ``upcase`` is called on ``value``. Because reassignment is non-mutating, a new string object is created in this step. So, ``s`` continues to point to an unmodified string object, while ``value`` now points to ``HELLO``. The ``concat`` method is used to append a ``!`` character to the new string object and then the value ``HELLO!`` is returned from the ``fix`` method which is assigned to local variable ``t``. 
+
+3. What does this code output and return and why? What concept does this demonstrate.
+```ruby
+def fix(value)
+  value << 'xyz'
+  value = value.upcase
+  value.concat('!')
+end
+
+s = 'hello'
+t = fix(s)
+```
+The values referenced by ``s`` and ``t`` are ``helloxyz`` and ``HELLOXYZ!`` respectively. The string object ``hello`` referenced by ``s`` is passed to the ``fix`` method as an argument. This string object is assigned to local variable ``value`` and then has the ``<<`` method called on it with ``xyz`` as an argument. Because ``<<`` is mutating, the object ``hello`` is modified in memory. Then value is reassigned to a new object, the value of the original string object in uppercase. Because reassignment is non-mutating value is assigned to a new string object with this value and the original string object is unmodified. Then, again, the ``concat`` method is used to append the string object ``!`` to the end of ``HELLOXYZ``. This object is then implicitly returned and assigned to ``t``. 
+
+
+4. What does this code output and return and why? What concept does this demonstrate. What values do ``s`` and ``t`` reference? 
+```ruby
+def fix(value)
+  value = value.upcase!
+  value.concat('!')
+end
+
+s = 'hello'
+t = fix(s)
+```
+The value referenced by ``s`` and ``t`` is ``HELLO!``. This is because when the string object ``hello`` is passed to the method via the variable ``s`` only mutating methods are called on it. In the first line of the method the ``upcase!`` method returns a reference to the same object after it modifies it, so ``value`` contains a reference to the same object after the reassignment. Then the ``concat`` method appends the string ``!`` to the end of the string object ``HELLO`` that ``value `` references. ``HELLO!`` is then returned from the method and ``t`` is assigned to this object. 
+
+5. What does this code output and return and why? What concept does this demonstrate. What values do ``s`` and ``t`` reference? 
+```ruby
+def fix(value)
+ value[1] = 'x'
+ value 
+end
+
+s = 'abc'
+t = fix(s)
+```
+``s`` references a string object ``axc`` and ``t`` references the same object. The ``[]=`` method is mutating, so when it's called on ``value`` inside of the ``fix`` method it modifies the object that the local variable ``value`` references. This object is the same object that the outer scope local variable ``s`` is assigned to on line 5. This is because this object is passed to the method when the variable ``s`` is used as an argument to call the ``fix`` method. ``abx`` is then returned from the method and assigned to t. 
+6. What does the following code return? What does it output? Why? What concept does it demonstrate?
+```ruby
+def a_method(string)
+  string << ' world'
+end
+
+a = 'hello'
+a_method(a)
+
+p a
+```
+This code returns ``hello world`` when ``p`` is called with local variable ``a`` as its argument. This is because ``a`` is initially assigned to ``hello`` and then passed into the ``a_method`` method as an argument. As a result, ``a`` passes the value it references to the method, which assigns it to the method scoped variable ``string``. The ``<<`` method is then called on the variable ``string`` and is passed the argument ``world``. The ``<<`` method is mutating, so the string object is modified in memory and becomes ``hello world``. The local variable ``a`` continues to point to this modified object and so when the ``p`` object is invoked on ``a`` that's the object that's returned and output to the screen. 
+
+7. What does the following code return? What does it output? Why? What concept does it demonstrate?
+```ruby
+num = 3
+
+num = 2 * num
+```
+when this code is called, ``num`` is initially assigned to 3. Then it's reassigned to the value 2 ``*`` 3, because when ``num`` is evaluated by Ruby it returns the object that it references in memory. So, ``num`` references the integer ``6`` in memory. 
+8. What does the following code return? What does it output? Why? What concept does it demonstrate?
+```ruby
+a = %w(a b c)
+a[1] = '-'
+p a
+```
+The following code returns the array ``[a, -, c]``. This is because the ``[]=`` method is called on the array. This method is sometimes confused for reassignment, which is non-mutating, but the ``[]=`` method is actualy desstructive, so it modifies the original object. As a result, when ``a`` is used to invoke the ``p`` method, the modified array is returned and output to the screen. 
+
+9. What does the following code return, output and why? What concept is it demonstrating?
+```ruby
+def add_name(arr, name)
+  arr = arr + [name]
+end
+
+names = ['bob', 'kim']
+add_name(names, 'jim')
+puts names
+```
+This code returns ``['bob', 'kim']`` and outputs zero when the ``puts`` method is called on local variable ``names`` because the ``+`` method is non-mutating and variable reassignment is non-mutating. As a result, the object reference by local variable ``arr`` within the method is reassigned to a new array when the ``Array#+`` method is invoked. This array is returned when the method is executed, but the object that ``names`` references in memory is not modified, so it returns the object that it was originally assigned to. 
+
+10. What does the following code return? What does it output? Why? What concept does it demonstrate?
+```ruby
+def add_name(arr, name)
+  arr = arr << name
+end
+
+names = ['bob', 'kim']
+add_name(names, 'jim')
+puts names
+```
+This code is in contrast to the code we saw in problem 9. This code does, in fact, modify the object that ``names`` references, so ``bob`` ``kim`` and ``jim`` are all output to the display on new lines and nil is returned when ``names`` is used as an argument when invoking the ``puts`` method. The object referenced by local variable ``names`` is modified because it's passd to the ``add_names`` method and then has a mutating method called on it. The array ``[`bob`, `kim`]`` is passed to the ``add_name`` method as an argument on line 6 via the local variable ``names``. This value is then assigned to method scoped variable ``arr``. When the mutating method ``<<`` is called on method scoped variable ``arr`` it mutates the array object, adding "jim" to the array. This object is then output when the local variable ``names`` is passed to the ``puts`` method on line 7.
+
+
