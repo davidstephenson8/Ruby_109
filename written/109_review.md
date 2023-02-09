@@ -251,7 +251,7 @@ nil.to_s             # returns ""
 ```ruby
 if true
   a = 20
-  else
+else
   b = 23
 end
 p a # returns 20
@@ -262,6 +262,7 @@ p b # returns nil
 - variable scope in ruby determines whether or not a variable is available for use. This scope is modified by the variable's location in the program with respect to blocks and method definitions.
 - method definitions have their own, self contained scope, and can only access variables that are passed into them as arguments
 - blocks are able to access variable initialized in an outer scope, and as a result are able to modify the values they point to. However, block scoped variables are not accessible by a more outer scope. 
+  - not every use of the ``do..end`` syntax denotes a block. When used with ``for`` and ``while``, ``do..end`` does not create a separate scope.  
 ## variables as pointers
 [Source](https://launchschool.com/books/ruby/read/more_stuff#variables_as_pointers)
 - variables don't contain a value. Variables point to a place in memory where the value is stored. This code block shows some of the consequences of this behavior.
@@ -357,6 +358,21 @@ end
 [Source](https://launchschool.com/books/ruby/read/methods#whataremethodsandwhydoweneedthem)
 - methods have their own scope outside of the flow of program execution. That's why local variables outside of the method can't be accessed from within the method, and why local variables within a method definition can't access data outside of the method definition. 
 ## method composition
+[Source](https://launchschool.com/books/ruby/read/methods#whataremethodsandwhydoweneedthem)
+- methods are written with the reserved word ``def``. After which they are given a name. Once the code for the method is written, the reserved word ``end`` is used to indicate it's completed. 
+```ruby
+def swag
+  "you can put some things in here"
+end
+```
+This method returns the string value inside. It's name is ``swag``
+- They can be given information from outside of the method scope using parameters, but these aren't necessary to write a method. 
+```ruby
+def swag(how_many)
+  "you can put #{how_many} things in here"
+end
+```
+this code returns the string contained inside with the parameter used to modify the string object. 
 ## output vs. return values, side effects
 [Source](https://launchschool.com/lessons/8a39abff/assignments/20d8a9c5)
 - Output is what is displayed to the user. Commonly used methods for output are ``#puts`` and ``#p``
@@ -374,10 +390,16 @@ end
   - this means that in cases of assignment and with immutable data types like booleans and integers, Ruby behaves like a pass by value language.
     - assignment is non-mutating because a variable is just a pointer, it doesn't contain an actual object. Assignment (or reassignment) changes the pointer to a different place in memory, which means that the object is different from the one originally bound
       - assignment is different from ``#[]=``, which commonly confuses people. ``#[]=`` mutates the array, string or hash it's called on. 
-  - when Ruby is dealing with 
+  - when Ruby is dealing with mutable data types like strings, arrays and hashes it behaves like a pass by reference language
+    - this means that a reference to the object is passed into the method and the object can be mutated or changed by operations within the method. The assignment of an outer variable to an object cannot be changed, however. 
 ## the call stack
+[Source](https://launchschool.com/books/ruby/read/methods#callstack)]
 - Allows Ruby to track what method is executing and where it should return to once execution ends
-- When the line that a method is invoked on is reached in program execution, a new frame is pushed to the stack 
+- The frame that serves as the base for the stack is called the stack frame. It represents the global portion of the problem.
+  - this can sometimes be referred to as the main method. 
+-  When the line that a method is invoked on is reached in program execution, the program takes note of the line in the main stack frame. Then a new frame is pushed to the stack.
+- This process can be repeated multiple times, with multiple methods being called and added to the stack.
+- Whatever method is currently being executed is said to be active, and the frames beneath it are said to be dormant. 
 - Both built in and user written methods use the stack 
 - Once the method is finished, the frame is popped from the stack
 # expressions and statements
