@@ -388,20 +388,46 @@ this code returns the string contained inside with the parameter used to modify 
 - In pass by value, arguements are passed to methods as values. This means that methods are unable to modify them
 - Ruby has elements of each object passing strategy, and can be thought of as a "pass by reference value" language.
   - this means that in cases of assignment and with immutable data types like booleans and integers, Ruby behaves like a pass by value language.
+```ruby
+a = 902
+b = 3409
+
+def summer(x, y)
+  x += y
+end
+
+summer(a, b)
+p a
+p b
+
+```
     - assignment is non-mutating because a variable is just a pointer, it doesn't contain an actual object. Assignment (or reassignment) changes the pointer to a different place in memory, which means that the object is different from the one originally bound
-      - assignment is different from ``#[]=``, which commonly confuses people. ``#[]=`` mutates the array, string or hash it's called on. 
+```ruby
+a = "Clarence"
+
+def feminizer(name)
+  name += "a"
+end
+
+b = feminizer(a)
+```
+in this code, because reassignement is performed, the value of ``a`` remains "Clarence" but the value returned by the method and assigned to variable ``b`` is ``"Clarencea"``. 
+
+  - assignment is different from ``#[]=``, which commonly confuses people. ``#[]=`` mutates the array, string or hash it's called on. 
   - when Ruby is dealing with mutable data types like strings, arrays and hashes it behaves like a pass by reference language
     - this means that a reference to the object is passed into the method and the object can be mutated or changed by operations within the method. The assignment of an outer variable to an object cannot be changed, however. 
 ## the call stack
-[Source](https://launchschool.com/books/ruby/read/methods#callstack)]
+[Source](https://launchschool.com/books/ruby/read/methods#callstack)
 - Allows Ruby to track what method is executing and where it should return to once execution ends
 - The frame that serves as the base for the stack is called the stack frame. It represents the global portion of the problem.
   - this can sometimes be referred to as the main method. 
 -  When the line that a method is invoked on is reached in program execution, the program takes note of the line in the main stack frame. Then a new frame is pushed to the stack.
 - This process can be repeated multiple times, with multiple methods being called and added to the stack.
-- Whatever method is currently being executed is said to be active, and the frames beneath it are said to be dormant. 
+- Whatever method is currently being executed is said to be active, and the frames beneath it are said to be dormant.
+- Once the method is finished, the frame is popped from the stack, and program execution uses the fram to determine which line to return to. 
+- If there's no more code to run, the main frame gets popped from the stack and the program ends.  
 - Both built in and user written methods use the stack 
-- Once the method is finished, the frame is popped from the stack
+
 # expressions and statements
 [Source (Pete's post especially)](https://launchschool.com/posts/8dc42166)
 - the difference between expressions and statements isn't especially well definted in most languages, Ruby is no exception. 

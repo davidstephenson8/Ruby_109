@@ -407,4 +407,16 @@ puts names
 ```
 This code is in contrast to the code we saw in problem 9. This code does, in fact, modify the object that ``names`` references, so ``bob`` ``kim`` and ``jim`` are all output to the display on new lines and nil is returned when ``names`` is used as an argument when invoking the ``puts`` method. The object referenced by local variable ``names`` is modified because it's passd to the ``add_names`` method and then has a mutating method called on it. The array ``[`bob`, `kim`]`` is passed to the ``add_name`` method as an argument on line 6 via the local variable ``names``. This value is then assigned to method scoped variable ``arr``. When the mutating method ``<<`` is called on method scoped variable ``arr`` it mutates the array object, adding "jim" to the array. This object is then output when the local variable ``names`` is passed to the ``puts`` method on line 7.
 
+4. (from Methods section of Ruby Basics)
+```ruby
+def scream(words)
+  words = words + "!!!!"
+  return
+  puts words
+end
+
+scream("Yippeee")
+```
+
+This code demonstrates the concept of pass by reference vs pass by value in Ruby. Because the value words is reassigned in the method body, it won't be mutated outside of the method, that object remains the same. A new object is created and concatenated with "!!!!" and assigned to the method scoped variable ``words``. The return keyword is then executed and program returns from the method without executing the final expression on line 4. So, scream returns ``"Yipee!!!!"`` and is non-mutating. 
 
