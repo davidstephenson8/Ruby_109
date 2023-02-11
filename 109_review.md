@@ -158,6 +158,9 @@ songs[:boy] => "genius"
 - ``Array#size`` returns the number of elements in an array as an integer
 - ``Array#push`` adds the argument to the end of the array and is mutating
 - ``Array#pop`` returns the last element of an array and deletes the element that it returns. It is mutating
+- ``Array#join`` combines all of the elements of an array into a string object that it returns
+- ``Array#size`` returns an integer equal to the number of elements in the array
+- ``Array#reverse`` returns a new array with the elements of the original array in reverse order.  
 # operators
 [Source](https://launchschool.com/books/ruby/read/basics#operations)
 ## numeric operators: +, -, *, /, %, divmod, **
@@ -169,7 +172,7 @@ songs[:boy] => "genius"
 16.divmod(3) => [5, 1]
 ```
 ## string operators: +, *
-- ``+`` returns a new string containing the two original string concatenated 
+- ``+`` returns a new string containing the two original strings concatenated 
 - ``*`` returns a new string with a number of copies of self determined by the integer passed to it
 ```ruby
 "Storm" + "Front" # "StormFront"

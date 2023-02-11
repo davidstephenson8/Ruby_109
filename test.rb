@@ -1,9 +1,13 @@
-a = 7
+array = [2, 4, 6, 8]
 
-array = [1, 2, 3, 4]
+another_num = 0
 
-array.each do |swag|
-  a = swag + 1
+index = 0
+loop do
+  puts (array[index] - 2)
+  another_num = array[index] - 2
+  index += 1
+  break if (array.size) == index
 end
 
-p a
+puts another_num
